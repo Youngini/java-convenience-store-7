@@ -26,4 +26,14 @@ public class ProductService {
             }
         }
     }
+
+    // 2. 재고 업데이트
+    public void updateInventory(Items items) {
+        for (Item item : items.getItems()) {
+            Product product = products.get(item.getName());
+            int requestedQuantity = Integer.parseInt(item.getQuantity());
+            product.reduceQuantity(requestedQuantity);
+        }
+    }
+
 }

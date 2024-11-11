@@ -1,7 +1,5 @@
 package store.domain;
 
-import java.util.Optional;
-
 public class Product {
     private String name;
     private int price;
@@ -29,5 +27,9 @@ public class Product {
 
     public int getPrice() {
         return this.price;
+    }
+
+    public void reduceQuantity(int requestedQuantity) {
+        this.quantity -= requestedQuantity;
     }
 }
