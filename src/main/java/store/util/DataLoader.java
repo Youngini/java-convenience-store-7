@@ -2,6 +2,7 @@ package store.util;
 
 import store.domain.Product;
 import store.domain.Promotion;
+import store.view.OutputView;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,55 +19,67 @@ public class DataLoader {
         List<Promotion> promotions = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
             br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
-                String name = fields[0];
-                int buy = Integer.parseInt(fields[1]);
-                int get = Integer.parseInt(fields[2]);
-                LocalDate startDate = LocalDate.parse(fields[3]);
-                LocalDate endDate = LocalDate.parse(fields[4]);
-
-                Promotion promotion = new Promotion(name, startDate, endDate, buy, get);
-                promotions.add(promotion);
-            }
+            readPromotionLines(br, promotions);
         } catch (IOException e) {
-            System.out.println("[ERROR] promotions.md를 읽어오는데 문제가 발생했습니다. " + e.getMessage());
+            OutputView.printError("promotions.md를 읽어오는데 문제가 발생했습니다.", e);
         }
-
         return promotions;
+    }
+
+    private void readPromotionLines(BufferedReader br, List<Promotion> promotions) throws IOException {
+        String line;
+        while ((line = br.readLine()) != null) {
+            promotions.add(createPromotion(line));
+        }
+    }
+
+    private Promotion createPromotion(String line) {
+        String[] fields = line.split(",");
+        String name = fields[0];
+        int buy = Integer.parseInt(fields[1]);
+        int get = Integer.parseInt(fields[2]);
+        LocalDate startDate = LocalDate.parse(fields[3]);
+        LocalDate endDate = LocalDate.parse(fields[4]);
+
+        return new Promotion(name, startDate, endDate, buy, get);
     }
 
     public List<Product> loadProducts(String filePath, List<Promotion> promotions) {
         List<Product> products = new ArrayList<>();
-
-        Map<String, Promotion> promotionMap = new HashMap<>();
-        for (Promotion promo : promotions) {
-            promotionMap.put(promo.getName(), promo);
-        }
+        Map<String, Promotion> promotionMap = createPromotionMap(promotions);
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
             br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",");
-                String name = fields[0];
-                int price = Integer.parseInt(fields[1]);
-                int quantity = Integer.parseInt(fields[2]);
-                String promotionName = fields[3].equals("null") ? null : fields[3];
-
-                Promotion promotion = promotionName != null ? promotionMap.get(promotionName) : null;
-
-                Product product = new Product(name, price, quantity, promotion);
-                products.add(product);
-            }
+            readProductLines(br, products, promotionMap);
         } catch (IOException e) {
-            System.out.println("[ERROR] products.md를 읽어오는데 문제가 발생했습니다." + e.getMessage());
+            OutputView.printError("products.md를 읽어오는데 문제가 발생했습니다.", e);
         }
         return products;
     }
 
+    private void readProductLines(BufferedReader br, List<Product> products, Map<String, Promotion> promotionMap) throws IOException {
+        String line;
+        while ((line = br.readLine()) != null) {
+            products.add(createProduct(line, promotionMap));
+        }
+    }
+
+    private Map<String, Promotion> createPromotionMap(List<Promotion> promotions) {
+        Map<String, Promotion> promotionMap = new HashMap<>();
+        for (Promotion promo : promotions) {
+            promotionMap.put(promo.getName(), promo);
+        }
+        return promotionMap;
+    }
+
+    private Product createProduct(String line, Map<String, Promotion> promotionMap) {
+        String[] fields = line.split(",");
+        String name = fields[0];
+        int price = Integer.parseInt(fields[1]);
+        int quantity = Integer.parseInt(fields[2]);
+        Promotion promotion = fields[3].equals("null") ? null : promotionMap.get(fields[3]);
+
+        return new Product(name, price, quantity, promotion);
+    }
 }
