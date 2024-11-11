@@ -14,4 +14,20 @@ public class Product {
         this.quantity = quantity;
         this.promotion = promotion;
     }
+
+    public Promotion getPromotion() {
+        return this.promotion;
+    }
+
+    public int getQuantity() {
+        return this.quantity;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getPrice() {
+        return this.price;
+    }
 }
