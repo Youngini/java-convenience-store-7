@@ -6,9 +6,9 @@ public class Product {
     private String name;
     private int price;
     private int quantity;
-    private Optional<Promotion> promotion;
+    private Promotion promotion;
 
-    public Product(String name, int price, int quantity, Optional<Promotion> promotion) {
+    public Product(String name, int price, int quantity, Promotion promotion) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;

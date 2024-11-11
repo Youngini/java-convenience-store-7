@@ -16,4 +16,8 @@ public class Promotion {
         this.buy = buy;
         this.get = get;
     }
+
+    public String getName() {
+        return name;
+    }
 }
