@@ -1,6 +1,7 @@
 package store.domain;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 
 public class Promotion {
     private String name;
@@ -19,5 +20,21 @@ public class Promotion {
 
     public String getName() {
         return name;
+    }
+
+    public ChronoLocalDate getStartDate() {
+        return startDate;
+    }
+
+    public int getRequiredQuantity() {
+        return buy;
+    }
+
+    public int getFreeQuantity() {
+        return get;
+    }
+
+    public ChronoLocalDate getEndDate() {
+        return endDate;
     }
 }

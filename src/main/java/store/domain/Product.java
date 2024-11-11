@@ -32,4 +32,16 @@ public class Product {
     public void reduceQuantity(int requestedQuantity) {
         this.quantity -= requestedQuantity;
     }
+
+    public boolean hasPromotion() {
+        return this.promotion != null;
+    }
+
+    public int getPromotionStock() {
+        return this.quantity;
+    }
+
+    public void reducePromotionStock(int totalFreeItems) {
+        this.quantity -= totalFreeItems;
+    }
 }

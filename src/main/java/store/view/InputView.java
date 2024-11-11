@@ -12,4 +12,8 @@ public class InputView {
         String input = Console.readLine();
         return ItemParser.parseItems(input);
     }
+
+    public static String getUserResponse() {
+        return Console.readLine().trim();
+    }
 }
